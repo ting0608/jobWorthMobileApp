@@ -2,7 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { setField } from '../../redux/actions/calculatorActions';
-import { useT } from '../t';
+import { useT } from '../../t';
+
+function normalize(value, min, max, positive = true) {
+  if (value === '' || isNaN(Number(value))) return 0.5; // treat empty as neutral
+  const v = Math.max(min, Math.min(max, Number(value)));
+  const norm = (v - min) / (max - min);
+  return positive ? norm : 1 - norm;
+}
 
 export default function CalculatorScreen() {
   const dispatch = useDispatch();
@@ -26,8 +33,49 @@ export default function CalculatorScreen() {
   };
 
   const handleCalculate = () => {
-    // Placeholder for calculation logic
-    setResult('Calculation result will appear here.');
+    // Normalization ranges (can be adjusted)
+    const normSalary = normalize(salary, 2000, 20000, true);
+    // For region, use 1 for now (neutral)
+    const normRegion = 1;
+    const normWorkingDays = normalize(workingDays, 3, 7, false);
+    const normWFHDays = normalize(wfhDays, 0, 5, true);
+    const normAnnualLeaves = normalize(annualLeaves, 8, 30, true);
+    const normMedicalLeaves = normalize(medicalLeaves, 0, 20, true);
+    const normPublicHolidays = normalize(publicHolidays, 10, 20, true);
+    const normWorkingHours = normalize(workingHours, 6, 12, false);
+    const normCommuteTime = normalize(commuteTime, 0, 180, false);
+    const normRestTime = normalize(restTime, 0, 240, true);
+
+    // Weights
+    const weights = {
+      salary: 0.15,
+      region: 0.10,
+      workingDays: 0.10,
+      wfhDays: 0.10,
+      annualLeaves: 0.10,
+      medicalLeaves: 0.05,
+      publicHolidays: 0.05,
+      workingHours: 0.10,
+      commuteTime: 0.10,
+      restTime: 0.15,
+    };
+
+    // Weighted sum
+    const score =
+      normSalary * weights.salary +
+      normRegion * weights.region +
+      normWorkingDays * weights.workingDays +
+      normWFHDays * weights.wfhDays +
+      normAnnualLeaves * weights.annualLeaves +
+      normMedicalLeaves * weights.medicalLeaves +
+      normPublicHolidays * weights.publicHolidays +
+      normWorkingHours * weights.workingHours +
+      normCommuteTime * weights.commuteTime +
+      normRestTime * weights.restTime;
+
+    // Convert to 0-5 scale
+    const rating = (score * 5).toFixed(2);
+    setResult(rating);
   };
 
   return (
@@ -49,7 +97,7 @@ export default function CalculatorScreen() {
       {/* Row 1: Working days/week, WFH days/week */}
       <View style={styles.row}>
         <View style={styles.inputGroup}>
-          <Text style={styles.labelSmall}>{t('working_days')}</Text>
+          <Text style={styles.labelSmall}>{t('working_days')} 🐮🐴</Text>
           <TextInput
             style={styles.input}
             keyboardType="numeric"
@@ -86,7 +134,7 @@ export default function CalculatorScreen() {
           />
         </View>
         <View style={styles.inputGroup}>
-          <Text style={styles.labelSmall}>{t('medical_leaves')}</Text>
+          <Text style={styles.labelSmall}>{t('medical_leaves')} 🤒</Text>
           <TextInput
             style={styles.input}
             keyboardType="numeric"
@@ -127,7 +175,7 @@ export default function CalculatorScreen() {
       {/* Row 4: Commute (min/day), Rest (min/day) */}
       <View style={styles.row}>
         <View style={styles.inputGroup}>
-          <Text style={styles.labelSmall}>{t('commute')}</Text>
+          <Text style={styles.labelSmall}>{t('commute')} 🚗</Text>
           <TextInput
             style={styles.input}
             keyboardType="numeric"
@@ -155,7 +203,7 @@ export default function CalculatorScreen() {
           <Text style={styles.roundButtonText}>{t('calculate')}</Text>
         </TouchableOpacity>
       </View>
-      {result && <Text style={styles.result}>{t('result')}: {result}</Text>}
+      {result && <Text style={styles.result}>{t('result')}: {result} / 5 ⭐️</Text>}
     </ScrollView>
   );
 }
@@ -235,7 +283,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#9EC8B9',
-    marginTop: 16,
+    // marginTop: 16,
     textAlign: 'center',
     letterSpacing: 0.5,
   },

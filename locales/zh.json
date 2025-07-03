@@ -1,6 +1,6 @@
 {
   "header": "工作满意度计算器",
-  "salary": "薪资 (人民币)",
+  "salary": "薪资 (马币)",
   "region": "地区",
   "working_days": "每周工作天数",
   "wfh_days": "每周居家办公天数",
@@ -9,7 +9,7 @@
   "public_holidays": "公共假期",
   "working_hours": "每日工作时长",
   "commute": "通勤 (分钟/天)",
-  "rest": "休息 (分钟/天)",
+  "rest": "摸鱼 (分钟/天)",
   "calculate": "计算",
   "result": "满意度分数",
   "settings": "设置",

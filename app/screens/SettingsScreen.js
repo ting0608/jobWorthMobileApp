@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLanguage } from '../../redux/slices/languageSlice';
-import { useT } from '../t';
+import { useT } from '../../t';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SettingsScreen() {
@@ -11,6 +11,7 @@ export default function SettingsScreen() {
   const language = useSelector((state) => state.language.language);
 
   const handleLanguage = async (lang) => {
+    console.log('Setting language to:', lang);
     dispatch(setLanguage(lang));
     await AsyncStorage.setItem('language', lang);
     console.log('Redux language after change:', lang, 'Redux state:', store.getState().language.language);
@@ -18,7 +19,7 @@ export default function SettingsScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/images/backgroundElement1.gif')} style={styles.bgGif} />
+      {/* <Image source={require('../../assets/images/backgroundElement1.gif')} style={styles.bgGif} /> */}
       <Text style={styles.title}>{t('settings')}</Text>
       <Text style={styles.label}>{t('language')}</Text>
       <View style={styles.langRow}>
@@ -26,16 +27,16 @@ export default function SettingsScreen() {
           style={[styles.langButton, language === 'en' && styles.activeLang]}
           onPress={() => handleLanguage('en')}
         >
-          <Text style={styles.langText}>{t('english')}</Text>
+          <Text style={styles.langText}>{t('english')} 🇺🇸</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.langButton, language === 'zh' && styles.activeLang]}
           onPress={() => handleLanguage('zh')}
         >
-          <Text style={styles.langText}>{t('chinese')}</Text>
+          <Text style={styles.langText}>{t('chinese')} 🇨🇳</Text>
         </TouchableOpacity>
       </View>
-      <Image source={require('../../assets/images/backgroundElement2.gif')} style={styles.bgGif2} />
+      {/* <Image source={require('../../assets/images/backgroundElement2.gif')} style={styles.bgGif2} /> */}
 
     </View>
   );
@@ -91,11 +92,13 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 12,
-    borderWidth: 2,
+    borderWidth: 5,
     borderColor: '#eee',
     backgroundColor: '#f9f9f9',
     marginHorizontal: 8,
     zIndex: 2,
+    width: 140,
+    
   },
   activeLang: {
     borderColor: '#00796B',
