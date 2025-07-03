@@ -1,0 +1,19 @@
+{
+  "header": "Job Satisfaction Calculator",
+  "salary": "Salary (MYR)",
+  "region": "Region",
+  "working_days": "Working days/week",
+  "wfh_days": "WFH days/week",
+  "annual_leaves": "Annual leaves",
+  "medical_leaves": "Medical leaves",
+  "public_holidays": "Public holidays",
+  "working_hours": "Working hours/day",
+  "commute": "Commute (min/day)",
+  "rest": "Rest (min/day)",
+  "calculate": "Calculate",
+  "result": "Satisfaction Score",
+  "settings": "Settings",
+  "language": "Language",
+  "english": "English",
+  "chinese": "Chinese"
+} 
